@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Fumiya Sekimoto</title>
+<meta name="description" content="Fumiya Sekimotoのブログ。EC・AI・マーケティングについての思考と記録。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #FAFAF8;
+    --bg-card:  #F2EFE9;
+    --text:     #0C0C0B;
+    --text-sub: #6A6A67;
+    --text-dim: #A8A8A5;
+    --border:   #E3E0DA;
+    --font-serif: 'DM Serif Display', serif;
+    --font-sans:  'DM Sans', 'Noto Sans JP', sans-serif;
+    --font-mono:  'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.8;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  body.menu-open { overflow: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(250,250,248,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--font-serif);
+    font-size: 20px; color: var(--text); text-decoration: none;
+    z-index: 101; position: relative;
+  }
+  .hamburger {
+    width: 36px; height: 22px;
+    cursor: pointer; position: relative; z-index: 101;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background: none; border: none; padding: 0;
+  }
+  .hamburger span {
+    display: block; height: 1px; background: var(--text);
+    transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: center;
+  }
+  .hamburger.active span { background: #FAFAF8; }
+  .hamburger.active span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.active span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+  /* MENU OVERLAY */
+  .menu-overlay {
+    position: fixed; inset: 0; background: var(--text); z-index: 99;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 100px 48px 60px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .menu-overlay.active { opacity: 1; pointer-events: all; }
+  .menu-links { list-style: none; }
+  .menu-links li { overflow: hidden; margin-bottom: 4px; }
+  .menu-links a {
+    font-family: var(--font-serif);
+    font-size: clamp(52px, 9vw, 96px);
+    color: #FAFAF8; text-decoration: none; display: block;
+    line-height: 1.05; letter-spacing: -0.03em;
+    transform: translateY(110%);
+    transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1), color 0.3s;
+  }
+  .menu-links a:hover { color: #888; }
+  .menu-overlay.active .menu-links a { transform: translateY(0); }
+  .menu-links li:nth-child(1) a { transition-delay: 0.08s; }
+  .menu-links li:nth-child(2) a { transition-delay: 0.14s; }
+  .menu-links li:nth-child(3) a { transition-delay: 0.20s; }
+  .menu-footer {
+    position: absolute; bottom: 48px; left: 48px; right: 48px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .menu-footer-text { font-family: var(--font-mono); font-size: 11px; color: #555; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  /* LAYOUT */
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 48px; }
+
+  /* BLOG HEADER */
+  .blog-header {
+    padding: 160px 0 80px;
+    border-bottom: 1px solid var(--border);
+  }
+  .blog-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-dim);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease-out 0.2s both;
+  }
+  .blog-title {
+    font-family: var(--font-serif);
+    font-size: clamp(52px, 9vw, 100px);
+    line-height: 0.95; letter-spacing: -0.04em;
+    margin-bottom: 32px;
+    animation: fadeUp 0.9s ease-out 0.4s both;
+  }
+  .blog-desc {
+    font-size: 15px; color: var(--text-sub); line-height: 1.9;
+    max-width: 480px;
+    animation: fadeUp 0.9s ease-out 0.55s both;
+  }
+
+  /* COMING SOON */
+  .coming-soon {
+    padding: 120px 0;
+    text-align: center;
+  }
+  .coming-icon {
+    font-size: 40px;
+    margin-bottom: 32px;
+    display: block;
+    animation: fadeUp 0.8s ease-out 0.7s both;
+  }
+  .coming-title {
+    font-family: var(--font-serif);
+    font-size: 36px; letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    animation: fadeUp 0.8s ease-out 0.8s both;
+  }
+  .coming-title em { font-style: italic; color: var(--text-sub); }
+  .coming-text {
+    font-size: 15px; color: var(--text-sub); line-height: 1.9;
+    max-width: 400px; margin: 0 auto 48px;
+    animation: fadeUp 0.8s ease-out 0.9s both;
+  }
+
+  /* TOPICS PREVIEW */
+  .topics-section {
+    padding: 80px 0 120px;
+    border-top: 1px solid var(--border);
+  }
+  .topics-label {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-dim);
+    letter-spacing: 2.5px; text-transform: uppercase;
+    margin-bottom: 40px;
+    display: block;
+  }
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border);
+  }
+  .topic-item {
+    padding: 32px;
+    border-right: 1px solid var(--border);
+    animation: fadeUp 0.8s ease-out both;
+  }
+  .topic-item:last-child { border-right: none; }
+  .topic-num {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--text-dim);
+    letter-spacing: 2px; margin-bottom: 16px; display: block;
+  }
+  .topic-title {
+    font-family: var(--font-serif);
+    font-size: 18px; letter-spacing: -0.01em;
+    line-height: 1.3; margin-bottom: 10px;
+  }
+  .topic-desc { font-size: 12px; color: var(--text-sub); line-height: 1.8; }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: var(--font-serif); font-size: 16px; color: var(--text); text-decoration: none; }
+  .footer-copy { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 760px) {
+    nav       { padding: 20px 24px; }
+    .container { padding: 0 24px; }
+    .blog-header { padding: 130px 0 60px; }
+    .topics-grid { grid-template-columns: 1fr; }
+    .topic-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .topic-item:last-child { border-bottom: none; }
+    .menu-overlay { padding: 100px 24px 60px; }
+    .menu-footer  { left: 24px; right: 24px; bottom: 40px; flex-direction: column; gap: 8px; align-items: flex-start; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">F.S.</a>
+  <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay" role="dialog" aria-modal="true">
+  <ul class="menu-links">
+    <li><a href="index.html">Portfolio</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="blog.html">Blog</a></li>
+  </ul>
+  <div class="menu-footer">
+    <span class="menu-footer-text">Fumiya Sekimoto</span>
+    <span class="menu-footer-text">Tokyo, Japan</span>
+  </div>
+</div>
+
+<div class="blog-header">
+  <div class="container">
+    <p class="blog-eyebrow">Blog</p>
+    <h1 class="blog-title">Thoughts<br>&amp; Notes.</h1>
+    <p class="blog-desc">
+      EC・AI・マーケティング・日々の思考。<br>
+      「考えながら動く」人間の、記録と発信。
+    </p>
+  </div>
+</div>
+
+<div class="coming-soon">
+  <div class="container">
+    <span class="coming-icon">✍️</span>
+    <h2 class="coming-title">Coming<br><em>Soon.</em></h2>
+    <p class="coming-text">
+      ブログは準備中です。<br>
+      EC・AI・マーケティングについての<br>
+      リアルな思考を発信していく予定です。
+    </p>
+  </div>
+</div>
+
+<div class="topics-section">
+  <div class="container">
+    <span class="topics-label">予定テーマ</span>
+    <div class="topics-grid">
+      <div class="topic-item" style="animation-delay: 0.1s;">
+        <span class="topic-num">01</span>
+        <h3 class="topic-title">EC × Shopify</h3>
+        <p class="topic-desc">ゼロから立ち上げたBtoB ECの実録。Shopifyの設計思想、Liquidの書き方、実務でぶつかった壁と解決策。</p>
+      </div>
+      <div class="topic-item" style="animation-delay: 0.2s;">
+        <span class="topic-num">02</span>
+        <h3 class="topic-title">AI × 自動化</h3>
+        <p class="topic-desc">Claude / MCP / Pythonを使った業務自動化の実験記録。「これAIにやらせよう」という発想から生まれた仕組みたち。</p>
+      </div>
+      <div class="topic-item" style="animation-delay: 0.3s;">
+        <span class="topic-num">03</span>
+        <h3 class="topic-title">キャリア × 思考</h3>
+        <p class="topic-desc">異業種を渡り歩いた26歳の視点。働き方・お金・自律性についての率直な考え。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">F.S.</a>
+  <p class="footer-copy">© 2026 Fumiya Sekimoto. All rights reserved.</p>
+</footer>
+
+<script>
+  const hamburger   = document.getElementById('hamburger');
+  const menuOverlay = document.getElementById('menuOverlay');
+  function openMenu()  { hamburger.classList.add('active'); menuOverlay.classList.add('active'); document.body.classList.add('menu-open'); hamburger.setAttribute('aria-expanded','true'); }
+  function closeMenu() { hamburger.classList.remove('active'); menuOverlay.classList.remove('active'); document.body.classList.remove('menu-open'); hamburger.setAttribute('aria-expanded','false'); }
+  hamburger.addEventListener('click', () => menuOverlay.classList.contains('active') ? closeMenu() : openMenu());
+  document.querySelectorAll('.menu-links a').forEach(a => a.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+</script>
+</body>
+</html>
